@@ -27,3 +27,12 @@ cd OC_P7_Groupomania/backend
 nodemon server
 
 PORT :
+
+
+Documentation routes/api :
+
+http://localhost:3000/api/user/login
+
+http://localhost:3000/api/message
+
+http://localhost:3000/api/message/like
