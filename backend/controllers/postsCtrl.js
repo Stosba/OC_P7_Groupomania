@@ -9,8 +9,8 @@ const CONTENT_LIMIT = 4;
 const ITEMS_LIMIT = 50;
 
 // Routes
-module.exports = {
-  createMessage: function(req, res) {
+  
+  exports.createMessage = (req, res) => {
     // Getting auth header
     let headerAuth = req.headers['authorization'];
     let userId = jwtUtils.getUserId(headerAuth);
@@ -62,7 +62,8 @@ module.exports = {
       }
     });
   },
-  listMessages: function(req, res) {
+
+  exports.listMessages = (req, res) => {
     let fields = req.query.fields;
     let limit = parseInt(req.query.limit);
     let offset = parseInt(req.query.offset);
@@ -92,4 +93,3 @@ module.exports = {
       res.status(500).json({ "error": "invalid fields" });
     });
   }
-}

@@ -7,17 +7,17 @@ const asyncLib = require('async');
 // Regex
 const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const PASSWORD_REGEX = /^(?=.*\d).{4,8}$/;
+const USERNAME_REGEX = /^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$/;
 
 // routes
-module.exports = {
 
-    signup: function(req, res) {
+    exports.signup = async (req, res) => {
         // params
         let email = req.body.email;
         let username = req.body.username;
         let password = req.body.password;
         let bio = req.body.bio;
-        
+
         if (email == null || username == null || password == null) {
             return res.status(400).json({'error': 'missing parameters'});
         }
@@ -79,7 +79,7 @@ module.exports = {
           });
         },
 
-        login: function(req, res) {  
+        exports.login = (req, res) => {  
           // Params
           let email = req.body.email;
           let password = req.body.password;
@@ -128,35 +128,32 @@ module.exports = {
           });
         },
 
-        getUserProfile: function(req, res) {
+        exports.getUserProfile = async (req, res) => {
           // Getting auth header
           let headerAuth = req.headers['authorization'];
           let userId = jwtUtils.getUserId(headerAuth);
-      
+          let user = null;
           if (userId < 0)
             return res.status(400).json({ 'error': 'wrong token' });
-      
-          models.User.findOne({
-            attributes: [ 'id', 'email', 'username', 'bio' ],
-            where: { id: userId }
-          }).then(function(user) {
-            if (user) {
-              res.status(201).json(user);
-            } else {
-              res.status(404).json({ 'error': 'user not found' });
-            }
-          }).catch(function(err) {
-            res.status(500).json({ 'error': 'cannot fetch user' });
-          });
+          
+          try {
+             user = await models.User.findOne({
+              attributes: [ 'id', 'email', 'username', 'bio' ],
+              where: { id: userId }
+            })
+          } catch (error) {
+            return res.status(500).json({ 'error': 'cannot fetch user' });
+          }
+          return res.status(201).json(user);          
         },
 
-        updateUserProfile: function(req, res) {
+        exports.updateUserProfile = (req, res) => {
           // Getting auth header
           let headerAuth = req.headers['authorization'];
           let userId = jwtUtils.getUserId(headerAuth);     
           // Params
           let bio = req.body.bio;
-      
+
           asyncLib.waterfall([
             function(callback) {
               models.User.findOne({
@@ -189,5 +186,4 @@ module.exports = {
               return res.status(500).json({ 'error': 'cannot update user profile' });
             }
           });
-        }
-      }
+        }    

@@ -8,8 +8,8 @@ const DISLIKED = 0;
 const LIKED = 1;
 
 // Routes
-module.exports = {
-  likePost: function(req, res) {
+
+  exports.likePost = (req, res) => {
     // Getting auth header
     let headerAuth = req.headers['authorization'];
     let userId = jwtUtils.getUserId(headerAuth);
@@ -106,10 +106,11 @@ module.exports = {
       }
     });
   },
-  dislikePost: function(req, res) {
+
+  exports.dislikePost = (req, res) => {
    // Getting auth header
-   let headerAuth  = req.headers['authorization'];
-   let userId      = jwtUtils.getUserId(headerAuth);
+   let headerAuth = req.headers['authorization'];
+   let userId = jwtUtils.getUserId(headerAuth);
 
    // Params
    let messageId = parseInt(req.params.messageId);
@@ -203,4 +204,3 @@ module.exports = {
      }
    });
   }
-}

@@ -3,8 +3,7 @@ const jwt = require('jsonwebtoken');
 const JWT_SIGN_SECRET = '<JWT_SIGN_TOKEN>';
 
 // Exported functions
-module.exports = {
-  generateTokenForUser: function(userData) {
+exports.generateTokenForUser = (userData) => {
     return jwt.sign({
       userId: userData.id,
       isAdmin: userData.isAdmin
@@ -14,10 +13,11 @@ module.exports = {
       expiresIn: '1h'
     })
   },
-  parseAuthorization: function(authorization) {
-    return (authorization != null) ? authorization.replace('Bearer ', '') : null;
-  },
-  getUserId: function(authorization) {
+  // parseAuthorization: function(authorization) {
+  //   return (authorization != null) ? authorization.replace('Bearer ', '') : null;
+  // },
+  
+  exports.getUserId = (authorization) => {
     let userId = -1;
     let token = module.exports.parseAuthorization(authorization);
     if(token != null) {
@@ -29,4 +29,3 @@ module.exports = {
     }
     return userId;
   }
-}
