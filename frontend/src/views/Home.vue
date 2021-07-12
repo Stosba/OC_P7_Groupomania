@@ -1,18 +1,52 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <LoginForm v-if="!connected"/>
+
+    <Header v-if="connected"/>
+    <NewPost v-if="connected"/>
+    <Posts v-if="connected"/>
+    <div>Icons made by <a href="https://icon54.com/" title="Pixel perfect">Pixel perfect</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import LoginForm from '@/components/LoginForm.vue';
+import Posts from '@/components/Posts.vue';
+import Header from '@/components/Header.vue';
+import NewPost from '@/components/NewPost.vue';
 
 export default {
   name: 'Home',
+
   components: {
-    HelloWorld
+    LoginForm,
+    Posts,
+    Header,
+    NewPost
+  },
+
+  data() {
+    return{
+      connected: true
+    };
+  },
+
+  created(){
+    this.checkConnected()
+  },
+
+  methods: {
+    checkConnected(){
+      if(localStorage.user !== undefined){
+        this.connected = true;
+        console.log('Utilisateur connecté !');
+      }
+      else if(localStorage.user == undefined){
+        this.connected = false;
+        console.log('Utilisateur non connecté !');
+      }
+    }
   }
 }
 </script>

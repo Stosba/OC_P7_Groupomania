@@ -8,10 +8,10 @@ const rateLimit = require("express-rate-limit");
 const dotenv = require("dotenv");
 
 // import routes
-// const apiRouter = require('./apiRouter').router;
 const messagesRoutes = require('./routes/posts');
 const userRoutes = require('./routes/users');
 const likesRoutes = require('./routes/likes');
+const commentsRoutes = require("./routes/comment");
 dotenv.config();
 
 //constante à utiliser avec le package rateLimit
@@ -60,17 +60,17 @@ app.use(cookieSession({
   app.use(nocache());
 
 // body-parser qui permet d'extraire l'objet JSON de nos requetes post
+// express.json();
+// express.urlencoded()
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
 
 // route permettant d'afficher les images sur le frontend
-//   app.use('/images', express.static(path.join(__dirname, 'images')));
-
-// importation des routes pour les utiliser
-//   app.use('/api/', apiRouter);
+  app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // importation des routes pour les utiliser
 app.use('/api', messagesRoutes);
+app.use('/api', commentsRoutes);
 app.use('/api', userRoutes);
 app.use('/api', likesRoutes);
 

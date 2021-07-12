@@ -9,6 +9,46 @@ const LIKED = 1;
 
 // Routes
 
+exports.likePost = async (req, res) => {
+  try {
+     // Getting auth header
+     let headerAuth = req.headers['authorization'];
+     let userId = jwtUtils.getUserId(headerAuth);
+ 
+     // Params
+     let messageId = parseInt(req.params.messageId);
+ 
+     if (messageId <= 0) {
+       throw new Error('invalid parameters');
+     }
+
+     const message = await models.Message.findOne({
+      where: { id: messageId }
+      // where: {id: req.body.id}
+    });
+    if (!message) {
+			throw new Error("Sorry,we can't find message");
+    }
+    
+    const user = await models.User.findOne({
+      where: { id: userId } 
+    });
+    if (!user) {
+			throw new Error("Sorry,we can't find user");
+    }
+
+    const like = await models.Like.findOne({
+      where: {
+        userId: userId,
+        messageId: messageId
+      }
+    });
+
+  } catch {
+
+  }
+};
+
   exports.likePost = (req, res) => {
     // Getting auth header
     let headerAuth = req.headers['authorization'];
@@ -25,6 +65,7 @@ const LIKED = 1;
       function(callback) {
         models.Message.findOne({
           where: { id: messageId }
+          // where: {id: req.body.id}
         })
         .then(function(messageFound) {
           callback(null, messageFound);
@@ -37,6 +78,7 @@ const LIKED = 1;
         if(messageFound) {
           models.User.findOne({
             where: { id: userId }
+            // where: {id: req.user.id}
           })
           .then(function(userFound) {
             callback(null, messageFound, userFound);
@@ -60,7 +102,7 @@ const LIKED = 1;
             callback(null, messageFound, userFound, userAlreadyLikedFound);
           })
           .catch(function(err) {
-            return res.status(500).json({ 'error': 'unable to verify is user already liked' });
+            return res.status(500).json({ 'error': 'unable to verify if user already liked' });
           });
         } else {
           res.status(404).json({ 'error': 'user not exist' });
@@ -134,7 +176,8 @@ const LIKED = 1;
      function(messageFound, callback) {
        if(messageFound) {
          models.User.findOne({
-           where: { id: userId }
+          //  where: { id: userId }
+           where: {id: req.user.id}
          })
          .then(function(userFound) {
            callback(null, messageFound, userFound);
@@ -158,7 +201,7 @@ const LIKED = 1;
             callback(null, messageFound, userFound, userAlreadyLikedFound);
          })
          .catch(function(err) {
-           return res.status(500).json({ 'error': 'unable to verify is user already liked' });
+           return res.status(500).json({ 'error': 'unable to verify if user already liked' });
          });
        } else {
          res.status(404).json({ 'error': 'user not exist' });
