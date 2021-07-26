@@ -52,8 +52,7 @@ exports.signup = async (req, res) => {
 			username: username,
 			password: await bcrypt.hash(password, 10),
 			role: role,
-			isAdmin: 0,
-			latent: 1
+			isAdmin: 0
 		});
 
 		if (!newUser) {
@@ -72,7 +71,6 @@ exports.signup = async (req, res) => {
 			username: newUser.username,
 			isAdmin: newUser.isAdmin,
 			role: newUser.role,
-			latent: newUser.latent,
 			token
 		});
 	} catch (error) {
@@ -84,8 +82,7 @@ exports.login = async (req, res) => {
 	try {
 		const user = await models.User.findOne({
 			where: {
-				email: req.body.email,
-				latent: 1
+				email: req.body.email
 			}
 		});
 
@@ -116,7 +113,7 @@ exports.login = async (req, res) => {
 exports.getUserProfile = async (req, res) => {
 	try {
 		const user = await models.User.findOne({
-			attributes: ["id", "email", "username", "role", "isAdmin", "latent"],
+			attributes: ["id", "email", "username", "role", "isAdmin"],
 			where: {
 				id: req.user.id
 			}
@@ -139,15 +136,9 @@ exports.deleteUserProfile = async (req, res) => {
 		if (!userToFind) {
 			throw new Error("Sorry,can't find your account");
 		}
-
-		const notLatent = userToFind.update({
-			latent: 0
-		});
-
-		if (!notLatent) {
-			throw new Error("Sorry,something gone wrong , please try again later");
-		}
-
+        else { 
+        User.destroy({ where: {id: req.params.id} });
+        }
 		res.status(200).json({
 			message: "Your account has been successfully deleted"
 		});

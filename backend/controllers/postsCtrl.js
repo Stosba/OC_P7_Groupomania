@@ -6,7 +6,6 @@ const fs = require("fs");
 exports.createMessage = async (req, res) => {
   console.log(req.headers);
 	try {
-		attachment
 		const attachmentURL = `${req.protocol}://${req.get("host")}/images/${req.file.filename}`;
 
 		if (!attachmentURL) {

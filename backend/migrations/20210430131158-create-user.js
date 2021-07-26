@@ -24,17 +24,10 @@ module.exports = {
 				allowNull: false,
 				type: Sequelize.STRING
 			},
-      // bio: {
-      //   allowNull: true,
-      //   type: Sequelize.STRING
-      // },
       isAdmin: {
         allowNull: true,
         type: Sequelize.BOOLEAN
       },
-      latent: {
-				type: Sequelize.BOOLEAN
-			},
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

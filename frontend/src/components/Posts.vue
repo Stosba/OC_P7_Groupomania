@@ -10,12 +10,10 @@
                 <div class="post-content" v-html="characterLimit(post.content)"></div>
             </router-link>
             
-            <!--  Likes/ unlikes -->
-            <div class="likes">
-                <span class="like-count"> {{post.like}} </span> 
-                <span @click="postLike()"> <i class="fas fa-thumbs-up"> </i> </span> 
-                <span @click="postDislike()"> <i class="fas fa-thumbs-down"></i> </span>
-            </div>
+            <!-- Likes -->
+            <vue-star animate="animated rubberBand" color="#F05654">
+                <a slot="icon" class="fa fa-heart" @click="postLike"></a>
+            </vue-star>
             
             <!-- Comment -->
             <form @submit.prevent= newComment()>
@@ -38,9 +36,10 @@
 
 <script>
 import axios from 'axios';
+import VueStar from 'vue-star';
 
 export default {
-
+    VueStar,
     name: 'Posts',
     names: 'Comments',
 
@@ -124,18 +123,7 @@ export default {
                 }
             )
         },
-        postDislike() {
-            const postId = parseInt(this.$route.params.id);
-
-            axios.post(`${this.$apiUrl}/posts/${postId}/vote/dislike`,
-            {
-                headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${this.$token}`
-                    }
-                }
-            )
-        },
+        
 
         newComment(){
             const postId = parseInt(this.$route.params.id);
@@ -185,25 +173,6 @@ export default {
             .then(this.getAllComments());
         },
     },
-
-    props: {
-    iconName: {
-      type: String,
-      default: 'box'
-    },
-    width: {
-      type: [Number, String],
-      default: 18
-    },
-    height: {
-      type: [Number, String],
-      default: 18
-    },
-    iconColor: {
-      type: String,
-      default: 'currentColor'
-    }
-  }
 }
 </script>
 
